@@ -1,0 +1,11 @@
+services:
+  rumqttd:
+    image: 'bytebeamio/rumqttd'
+    restart: always
+
+  rumqttc:
+    build: ./mqtt-client
+    links:
+      - rumqttd:rumqttd
+    restart: always
+
