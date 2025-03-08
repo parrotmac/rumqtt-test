@@ -1,5 +1,5 @@
 use rumqttc::{AsyncClient, MqttOptions, QoS};
-use std::time::{Duration, SystemTime};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use tokio::{task, time};
 
 #[tokio::main]
@@ -20,8 +20,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     });
 
         loop {
-            let now = SystemTime::now();
-            let outgoing_message = format!("{}", now.elapsed().unwrap().as_secs());
+            let start = SystemTime::now();
+            let now = start
+                    .duration_since(UNIX_EPOCH)
+                    .expect("Time went backwards");
+            let outgoing_message = format!("{}", now.as_secs());
+
+            println!("Attempting to send {}", outgoing_message);
             if let Err(e) = client
                 .publish("hello/rumqtt", QoS::AtLeastOnce, false, outgoing_message.as_bytes().to_vec())
                 .await {

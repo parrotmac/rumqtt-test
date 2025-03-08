@@ -5,4 +5,5 @@ edition = "2024"
 
 [dependencies]
 rumqttc = "0.24.0"
+src = "0.0.6"
 tokio = { version = "1.44.0", features = ["rt-multi-thread"] }
